@@ -1,7 +1,7 @@
 # Resumer????
 *Made for [**cmd-f 2026**] - 24-hour Hackathon*
 
-A productivity website that receive client's resume and job details, and refine the resume to matches the specific job description. 
+A productivity website that receive client's resume and job details, and auto-refine the resume to matches the specific job description. 
 
 ## How to Run
 1. Clone the repo
