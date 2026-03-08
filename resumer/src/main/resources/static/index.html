@@ -11,35 +11,29 @@
 <body>
 <div class="container">
     <h2>ReTeX</h2>
-
     <form hx-post="/api/resume/refine"
           hx-encoding="multipart/form-data"
           hx-target="#preview-pane"
           hx-indicator="#loading-spinner">
 
-        <label>Paste Job Description:</label><br>
-        <textarea name="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
+        <label>Job Description</label>
+        <textarea name="jobDescription" placeholder="Paste requirements here..."></textarea>
 
-        <label>Upload your Resume (.tex):</label><br>
-        <input type="file" name="file" accept=".tex"><br><br>
+        <div class="input-group">
+            <label>Upload your Resume</label>
+            <input type="file" name="file" accept=".tex">
+        </div>
 
-        <button type="submit">Refine my resume!</button>
+        <button type="submit" style="margin-top: 10px;">Refine my resume!</button>
 
-        <div id="loading-spinner" class="htmx-indicator" style="text-align: center; margin-top: 15px;">
+        <div id="loading-spinner" class="htmx-indicator spinner-container">
             <div class="spinner"></div>
-            <p style="font-size: 0.875rem; color: var(--primary); font-weight: 500;">
-                Matching... Refining... Polishing...
-            </p>
+            <p>Matching... Refining... Polishing...</p>
         </div>
     </form>
+</div>
 
-    <hr>
-
-    <div id="preview-pane">
-        <p style="color: gray; text-align: center; font-size: 0.9rem;">
-            Your refined resume will appear here.
-        </p>
-    </div>
+<div id="preview-pane" class="full-width-output">
 </div>
 </body>
 </html>
