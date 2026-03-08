@@ -1,17 +1,20 @@
 package cmd.resumer;
 
 import org.apache.tika.Tika;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Base64;
+
 @RestController
-@RequestMapping("/api/resume")
 public class ResumeController {
 
     @Autowired
     private GoogleGenAiChatModel chatModel;
+    private final TexToPDF texToPDF = new TexToPDF();
 
     @PostMapping("/refine")
     @ResponseBody
@@ -23,7 +26,7 @@ public class ResumeController {
             String resumeText = tika.parseToString(file.getInputStream());
 
             //testing
-            System.out.println("Extracted Resume Text: " + resumeText);
+//            System.out.println("Extracted Resume Text: " + resumeText);
             // 2. The "Mega Prompt" for better results
             String prompt = """
             You are an expert career coach and a LaTeX typesetter.
@@ -43,8 +46,42 @@ public class ResumeController {
             """.formatted(jobDescription, resumeText);
 
             // 3. Send to Gemini
-            return chatModel.call(prompt);
-//            return resumeText;
+            System.out.println("Converting...");
+            String response = chatModel.call(prompt);
+
+            // Testing
+            System.out.print(response);
+
+            // Convert to pdf
+            byte[] pdfBytes = texToPDF.compileWithApi(response);
+//          byte[] pdfBytes = texToPDF.compileWithApi(resumeText);
+
+            String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+// Escape the response for the HTML attribute to prevent "quote" breaking
+            String escapedLatex = response.replace("\"", "&quot;").replace("'", "&apos;");
+
+            return """
+    <div>
+        <h4 style='color: #28a745;'>✨ Refinement Complete!</h4>
+        
+        <iframe src='data:application/pdf;base64,%s' 
+                style='width:100%%; height:600px; border:1px solid #eee; border-radius: 4px;'>
+        </iframe>
+        
+        <div style='margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;'>
+            <p style='margin-bottom: 10px; font-size: 0.9em; color: #555;'>
+                Want to make manual tweaks or download the source?
+            </p>
+            <form action="https://www.overleaf.com/docs" method="POST" target="_blank">
+                <input type="hidden" name="snip" value="%s">
+                <button type="submit" style="background: #47a141; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                    🚀 Open in Overleaf (Get PDF/Edit)
+                </button>
+            </form>
+        </div>
+    </div>
+    """.formatted(base64Pdf, escapedLatex);
 
         } catch (Exception e) {
             return "Error: Could not read the file. Make sure it's a valid PDF or Word doc. " + e.getMessage();
