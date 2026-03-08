@@ -19,7 +19,8 @@ public class ResumeController {
     @PostMapping("/api/resume/refine")
     @ResponseBody
     public String refine(@RequestParam("file") MultipartFile file,
-                         @RequestParam("jobDescription") String jobDescription) {
+                         @RequestParam("jobDescription") String jobDescription,
+                         @RequestParam("tone") String tone) {
         try {
             // 1. Extract text from PDF/DOCX using Tika
             Tika tika = new Tika();
@@ -30,11 +31,12 @@ public class ResumeController {
             // 2. The "Mega Prompt" for better results
             String prompt = """
             You are an expert career coach and a LaTeX typesetter.
+            The user wants the final documents to have a %s tone.
             IMPORTANT: You must generate two separate LaTeX documents. Start the Resume with 
             \\\\documentclass and end it with \\\\end{document}. Then, add the marker: ===SPLIT_HERE===
             Then, start the Cover Letter with \\\\documentclass and end it with \\\\end{document}.
                     TASK 1 RESUME:
-                    Refine the provided resume to match the job description.\s
+                    Refine the provided resume to match the job description using a %s tone.\s
                     1. Highlight skills that match the job requirements.
                     2. Use strong action verbs and a professional tone.
                     3. IMPORTANT: You must return the FULL, valid LaTeX document.
@@ -43,7 +45,7 @@ public class ResumeController {
                     No spaces, no invisible characters, and no intro text.
                     
                     TASK 2, COVER LETTER:
-                    Use the provided resume to create a tailored cover letter that match the job description.\s
+                    Use the provided resume to create a tailored cover letter that match the job description using a %s tone.\s
                     1. Highlight skills that match the job requirements.
                     2. Use strong action verbs and a professional tone while keeping the original voice
                     3. IMPORTANT: You must return the FULL, valid LaTeX document.
@@ -56,7 +58,7 @@ public class ResumeController {
 
             RESUME CONTENT:
             %s
-            """.formatted(jobDescription, resumeText);
+            """.formatted(tone,tone, tone,jobDescription, resumeText);
 
             // 3. Send to Gemini
             System.out.println("Converting...");

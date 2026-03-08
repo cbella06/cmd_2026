@@ -26,7 +26,25 @@
             <label>Upload your Resume</label>
             <input type="file" name="file" accept=".tex">
         </div>
+        <div class="input-group">
+            <label>Select Tone</label>
+            <div class="tone-selector">
+                <input type="radio" id="prof" name="tone" value="Professional & Formal" checked>
+                <label for="prof" class="tone-chip">Professional</label>
 
+                <input type="radio" id="conf" name="tone" value="Confident & Impact-focused">
+                <label for="conf" class="tone-chip">Confident</label>
+
+                <input type="radio" id="conv" name="tone" value="Conversational & Friendly">
+                <label for="conv" class="tone-chip">Friendly</label>
+
+                <input type="radio" id="tech" name="tone" value="Technical & Analytical">
+                <label for="tech" class="tone-chip">Technical</label>
+
+                <input type="radio" id="story" name="tone" value="Storytelling & Personal">
+                <label for="story" class="tone-chip">Storytelling</label>
+            </div>
+        </div>
         <button type="submit" style="margin-top: 10px;">Refine my resume!</button>
 
         <div id="loading-spinner" class="htmx-indicator spinner-container">
@@ -35,6 +53,8 @@
         </div>
     </form>
 </div>
+
+
 
 <div id="preview-pane" class="full-width-output">
 </div>
