@@ -1,5 +1,5 @@
 :root {
-    --primary: #4f46e5; /* Modern Indigo */
+    --primary: #62afff; /* Modern Indigo */
     --success: #10b981; /* Emerald for Overleaf */
     --bg: #f8fafc;
     --card: #ffffff;
@@ -39,6 +39,13 @@ h2 {
     font-weight: 700;
     color: var(--primary);
     text-align: center;
+}
+
+/* Logo Styling */
+.project-logo {
+    max-width: 250px; /* Adjust this number to make your logo bigger or smaller */
+    height: auto;
+    margin-top: 10px;
 }
 
 /* This ensures the spinner is hidden until HTMX starts the request */
