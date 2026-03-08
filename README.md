@@ -1,6 +1,6 @@
 # ReTeX
-[![Watch the demo](resumer/src/main/resources/static/logo.png)]([https://www.youtube.com/watch?v=VIDEO_ID](https://youtu.be/SJlcgVJyo9k
-)<br>
+[![Watch the demo](resumer/src/main/resources/static/logo.png)](https://youtu.be/SJlcgVJyo9k)
+<br>
 (Click image for demo video)
 
 *Made for [**cmd-f 2026**] - 24-hour Hackathon*
