@@ -12,15 +12,76 @@
 <body>
 <div class="container">
     <h2>Resume Refiner</h2>
-    <form action="/api/resume/refine" method="post" enctype="multipart/form-data">
+    <div id="uploadForm">
         <label>Paste Job Description:</label><br>
-        <textarea name="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
+        <textarea id="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
 
         <label>Upload your Resume (Text file):</label><br>
-        <input type="file" name="file" accept=".tex,.txt">
+        <input type="file" id="resumeFile" accept=".tex,.txt"><br><br>
 
-        <button type="submit">Refine with AI!</button>
-    </form>
+        <button type="button" onclick="handleRefine()">Refine with AI!</button>
+    </div>
+
+    <hr>
+
+    <div id="resultArea" style="display:none; margin-top: 20px; text-align: center;">
+        <p>AI Refinement Complete!</p>
+        <form action="https://www.overleaf.com/docs" method="POST" target="_blank">
+            <input type="hidden" name="snip" id="latexContent">
+            <button type="submit" style="background: #28a745;">🚀 Open in Overleaf (Get PDF)</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    async function handleRefine() {
+        const jobDesc = document.getElementById('jobDescription').value;
+        const fileInput = document.getElementById('resumeFile');
+
+        if (!fileInput.files[0]) {
+            alert("Please upload a resume file first!");
+            return;
+        }
+
+        // Show a loading state on the button
+        const btn = event.target;
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        // Prepare the data to send to Spring Boot
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        formData.append("jobDescription", jobDesc);
+
+        try {
+            // 1. Send request to your Spring Boot Controller
+            const response = await fetch('/api/resume/refine', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const latexCode = await response.text();
+
+                // 2. Put the AI's LaTeX code into the Overleaf form
+                document.getElementById('latexContent').value = latexCode;
+
+                // 3. Reveal the Overleaf button
+                document.getElementById('resultArea').style.display = 'block';
+                btn.innerText = "Refine Again";
+                btn.disabled = false;
+            } else {
+                alert("AI Refinement failed. Check your console/server logs.");
+                btn.innerText = "Try Again";
+                btn.disabled = false;
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Connection error!");
+            btn.innerText = "Try Again";
+            btn.disabled = false;
+        }
+    }
+</script>
 </body>
 </html>

@@ -26,17 +26,15 @@ public class ResumeController {
             System.out.println("Extracted Resume Text: " + resumeText);
             // 2. The "Mega Prompt" for better results
             String prompt = """
-            You are an expert career coach.
-            I am providing a resume and a job description.
-            The resume is given as a .tex LaTeX file. Crucial: You must return the entire document 
-            as valid LaTeX code. Do not remove, alter, or break any of the formatting tags, macros, 
-            or structural elements (like \\begin{itemize} or \\textbf).
-            Please rewrite the resume to:
-            1. Highlight skills that match the job description.
-            2. Use strong action verbs.
-            3. Keep the tone professional.
-            Do not output any additional text other than the straight .tex file.
-
+            You are an expert career coach and a LaTeX typesetter.
+                    TASK:
+                    Refine the provided resume to match the job description.\s
+                    1. Highlight skills that match the job requirements.
+                    2. Use strong action verbs and a professional tone.
+                    3. IMPORTANT: You must return the FULL, valid LaTeX document.
+                    4. CRITICAL: Do NOT wrap the code in Markdown blocks (like ```latex).\s
+                    5. CRITICAL: Your response MUST start exactly with the characters '\\\\documentclass'.\s
+                    No spaces, no invisible characters, and no intro text.
             JOB DESCRIPTION:
             %s
 
