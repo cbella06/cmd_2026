@@ -28,10 +28,14 @@ public class ResumeController {
             String prompt = """
             You are an expert career coach.
             I am providing a resume and a job description.
+            The resume is given as a .tex LaTeX file. Crucial: You must return the entire document 
+            as valid LaTeX code. Do not remove, alter, or break any of the formatting tags, macros, 
+            or structural elements (like \\begin{itemize} or \\textbf).
             Please rewrite the resume to:
             1. Highlight skills that match the job description.
             2. Use strong action verbs.
             3. Keep the tone professional.
+            Do not output any additional text other than the straight .tex file.
 
             JOB DESCRIPTION:
             %s
