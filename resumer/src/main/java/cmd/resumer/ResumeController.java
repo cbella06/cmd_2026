@@ -42,6 +42,7 @@ public class ResumeController {
 
             // 3. Send to Gemini
             return chatModel.call(prompt);
+//            return resumeText;
 
         } catch (Exception e) {
             return "Error: Could not read the file. Make sure it's a valid PDF or Word doc. " + e.getMessage();
