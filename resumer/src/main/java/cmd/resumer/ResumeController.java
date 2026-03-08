@@ -13,12 +13,26 @@ public class ResumeController {
     private GoogleGenAiChatModel chatModel;
 
     @PostMapping("/refine")
+    @ResponseBody
     public String refine(@RequestParam("file") MultipartFile file,
                          @RequestParam("jobDescription") String jobDescription) {
+        try {
+            // 1. Convert the uploaded file into plain text
+            // (For now, we'll assume it's a simple text file or use a helper)
+            String resumeContent = new String(file.getBytes());
 
-        // 1. We will extract text from the file here later
-        // 2. We will send it to Gemini
-        // 3. We will return the result
-        return "System is ready! Received file: " + file.getOriginalFilename();
+            // 2. Create the "AI Instructions" (The Prompt)
+            String prompt = "I have a resume and a job description. " +
+                    "Please rewrite the resume to highlight the most relevant skills " +
+                    "for this specific job. Keep it professional.\n\n" +
+                    "RESUME:\n" + resumeContent + "\n\n" +
+                    "JOB DESCRIPTION:\n" + jobDescription;
+
+            // 3. Send it to Gemini and return the AI's response
+            return chatModel.call(prompt);
+
+        } catch (Exception e) {
+            return "Error processing resume: " + e.getMessage();
+        }
     }
 }

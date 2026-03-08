@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Refiner</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 50px auto; line-height: 1.6; }
+        .container { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🚀 Gemini Resume Refiner</h2>
+    <form action="/api/resume/refine" method="post" enctype="multipart/form-data">
+        <label>Paste Job Description:</label><br>
+        <textarea name="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
+
+        <label>Upload your Resume (Text file):</label><br>
+        <input type="file" name="file" accept=".txt"><br><br>
+
+        <button type="submit">Refine with AI</button>
+    </form>
+</div>
+</body>
+</html>
