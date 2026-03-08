@@ -1,5 +1,6 @@
 package cmd.resumer;
 
+import org.apache.tika.Tika;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
@@ -17,22 +18,33 @@ public class ResumeController {
     public String refine(@RequestParam("file") MultipartFile file,
                          @RequestParam("jobDescription") String jobDescription) {
         try {
-            // 1. Convert the uploaded file into plain text
-            // (For now, we'll assume it's a simple text file or use a helper)
-            String resumeContent = new String(file.getBytes());
+            // 1. Extract text from PDF/DOCX using Tika
+            Tika tika = new Tika();
+            String resumeText = tika.parseToString(file.getInputStream());
 
-            // 2. Create the "AI Instructions" (The Prompt)
-            String prompt = "I have a resume and a job description. " +
-                    "Please rewrite the resume to highlight the most relevant skills " +
-                    "for this specific job. Keep it professional.\n\n" +
-                    "RESUME:\n" + resumeContent + "\n\n" +
-                    "JOB DESCRIPTION:\n" + jobDescription;
+            //testing
+            System.out.println("Extracted Resume Text: " + resumeText);
+            // 2. The "Mega Prompt" for better results
+            String prompt = """
+            You are an expert career coach.
+            I am providing a resume and a job description.
+            Please rewrite the resume to:
+            1. Highlight skills that match the job description.
+            2. Use strong action verbs.
+            3. Keep the tone professional.
 
-            // 3. Send it to Gemini and return the AI's response
+            JOB DESCRIPTION:
+            %s
+
+            RESUME CONTENT:
+            %s
+            """.formatted(jobDescription, resumeText);
+
+            // 3. Send to Gemini
             return chatModel.call(prompt);
 
         } catch (Exception e) {
-            return "Error processing resume: " + e.getMessage();
+            return "Error: Could not read the file. Make sure it's a valid PDF or Word doc. " + e.getMessage();
         }
     }
 }

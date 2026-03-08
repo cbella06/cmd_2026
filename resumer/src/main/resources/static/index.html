@@ -11,13 +11,13 @@
 </head>
 <body>
 <div class="container">
-    <h2>🚀 Gemini Resume Refiner</h2>
+    <h2>Resume Refiner</h2>
     <form action="/api/resume/refine" method="post" enctype="multipart/form-data">
         <label>Paste Job Description:</label><br>
         <textarea name="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
 
         <label>Upload your Resume (Text file):</label><br>
-        <input type="file" name="file" accept=".txt"><br><br>
+        <input type="file" name="file" accept=".pdf,.docx,.txt">
 
         <button type="submit">Refine with AI</button>
     </form>
