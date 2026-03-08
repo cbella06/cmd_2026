@@ -1,0 +1,103 @@
+:root {
+    --primary: #4f46e5; /* Modern Indigo */
+    --success: #10b981; /* Emerald for Overleaf */
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    /*align-items: center;*/
+    align-items: flex-start;
+    padding-top: 50px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: var(--card);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 850px; /* <--horizontal space */
+    margin: 20px;
+}
+
+h2 {
+    margin-top: 0;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+}
+
+/* This ensures the spinner is hidden until HTMX starts the request */
+.htmx-indicator {
+    display: none;
+}
+.htmx-request .htmx-indicator {
+    display: block;
+}
+.htmx-request.htmx-indicator {
+    display: block;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+label { font-size: 0.875rem; font-weight: 600; color: #64748b; }
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin: 8px 0 16px 0;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+textarea:focus { outline: none; border-color: var(--primary); }
+
+input[type="file"] { margin: 8px 0 20px 0; font-size: 0.875rem; }
+
+/* Main Button Style */
+button {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+button:hover { opacity: 0.9; }
+button:active { transform: scale(0.98); }
+
+/* Overleaf Specific Button */
+#resultArea button {
+    background: var(--success);
+    margin-top: 15px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+hr { border: 0; border-top: 1px solid #f1f5f9; margin: 20px 0; }

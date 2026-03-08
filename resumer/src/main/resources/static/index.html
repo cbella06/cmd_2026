@@ -1,55 +1,44 @@
+<link rel="stylesheet" href="/style.css">
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>ReTeX | AI Resume Refiner</title>
+    <link rel="stylesheet" href="/style.css">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <title>AI Resume Refiner</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 50px auto; line-height: 1.6; }
-        .container { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
-        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
-        button { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; }
-    </style>
+
 </head>
 <body>
 <div class="container">
-    <h2>Resume Refiner</h2>
-    <form hx-post="/refine"
+    <h2>ReTeX</h2>
+
+    <form hx-post="/api/resume/refine"
           hx-encoding="multipart/form-data"
           hx-target="#preview-pane"
           hx-indicator="#loading-spinner">
 
-    <div id="uploadForm">
         <label>Paste Job Description:</label><br>
-        <textarea id="jobDescription" name="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
+        <textarea name="jobDescription" placeholder="Paste the job requirements here..."></textarea><br>
 
         <label>Upload your Resume (.tex):</label><br>
-        <input type="file" id="file" name="file" accept=".tex"><br><br>
+        <input type="file" name="file" accept=".tex"><br><br>
 
-<!--        <button type="button" onclick="handleRefine()">Refine with AI!</button>-->
-    </div>
+        <button type="submit">Refine my resume!</button>
 
-        <button type="submit">
-                Refine with AI!
-        </button>
-
-        <div id="loading-spinner" class="htmx-indicator">
-            <p>🚀 Gemini is polishing your resume... please wait.</p>
+        <div id="loading-spinner" class="htmx-indicator" style="text-align: center; margin-top: 15px;">
+            <div class="spinner"></div>
+            <p style="font-size: 0.875rem; color: var(--primary); font-weight: 500;">
+                Matching... Refining... Polishing...
+            </p>
         </div>
     </form>
 
     <hr>
 
     <div id="preview-pane">
-        <p style="color: gray; text-align: center;">Your refined PDF will appear here.</p>
-    </div>
-    <hr>
-
-    <div id="resultArea" style="display:none; margin-top: 20px; text-align: center;">
-        <p>AI Refinement Complete!</p>
-        <form action="https://www.overleaf.com/docs" method="POST" target="_blank">
-            <input type="hidden" name="snip" id="latexContent">
-            <button type="submit" style="background: #28a745;">🚀 Open in Overleaf (Get PDF)</button>
-        </form>
+        <p style="color: gray; text-align: center; font-size: 0.9rem;">
+            Your refined resume will appear here.
+        </p>
     </div>
 </div>
 </body>

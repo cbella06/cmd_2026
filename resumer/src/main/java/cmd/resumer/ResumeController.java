@@ -16,7 +16,7 @@ public class ResumeController {
     private GoogleGenAiChatModel chatModel;
     private final TexToPDF texToPDF = new TexToPDF();
 
-    @PostMapping("/refine")
+    @PostMapping("/api/resume/refine")
     @ResponseBody
     public String refine(@RequestParam("file") MultipartFile file,
                          @RequestParam("jobDescription") String jobDescription) {
@@ -81,47 +81,51 @@ public class ResumeController {
             String escapedResume = response.replace("\"", "&quot;").replace("'", "&apos;");
             String escapedCoverLetter = response.replace("\"", "&quot;").replace("'", "&apos;");
 
-            return """
-    <div>
-        <h4 style='color: #28a745; text-align: center;'>✨ Refinement Complete!</h4>
-        
-        <div style='display: flex; gap: 20px; align-items: flex-start;'>
-            
-            <div style='flex: 1;'>
-                <h5 style='text-align: center;'>📄 Refined Resume</h5>
-                <iframe src='data:application/pdf;base64,%s' 
-                        style='width:100%%; height:600px; border:1px solid #eee; border-radius: 4px;'>
-                </iframe>
-                
-                <div style='margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; text-align: center;'>
-                    <form action="https://www.overleaf.com/docs" method="POST" target="_blank" onsubmit="this.snip.value = atob('%s')">
-                        <input type="hidden" name="snip" value="">
-                        <button type="submit" style="background: #47a141; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
-                            🚀 Open Resume in Overleaf
-                        </button>
-                    </form>
-                </div>
-            </div>
+            // We need to properly escape the LaTeX for a hidden HTML input value
+            String finalResumeLatex = resumeLatex.replace("\"", "&quot;").replace("'", "&apos;");
+            String finalCoverLetterLatex = coverLetterLatex.replace("\"", "&quot;").replace("'", "&apos;");
 
-            <div style='flex: 1;'>
-                <h5 style='text-align: center;'>✉️ Cover Letter</h5>
-                <iframe src='data:application/pdf;base64,%s' 
-                        style='width:100%%; height:600px; border:1px solid #eee; border-radius: 4px;'>
-                </iframe>
-                
-                <div style='margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; text-align: center;'>
-                    <form action="https://www.overleaf.com/docs" method="POST" target="_blank" onsubmit="this.snip.value = atob('%s')">
-                        <input type="hidden" name="snip" value="">
-                        <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
-                            🚀 Open Letter in Overleaf
-                        </button>
-                    </form>
-                </div>
-            </div>
+            return """
+<div>
+    <h4 style='color: #28a745; text-align: center; margin-bottom: 20px;'>✨ Refinement Complete!</h4>
+    
+    <div style='display: flex; gap: 20px; align-items: flex-start;'>
+        
+        <div style='flex: 1;'>
+            <h5 style='text-align: center; margin-bottom: 10px;'>📄 Refined Resume</h5>
+            <iframe src='data:application/pdf;base64,%s' 
+                    style='width:100%%; height:600px; border:1px solid #eee; border-radius: 8px;'>
+            </iframe>
             
+            <div style='margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;'>
+                <form action="https://www.overleaf.com/docs" method="POST" target="_blank">
+                    <input type="hidden" name="snip" value="%s">
+                    <button type="submit" style="background: #47a141; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%%;">
+                        🚀 Open Resume in Overleaf
+                    </button>
+                </form>
+            </div>
         </div>
+
+        <div style='flex: 1;'>
+            <h5 style='text-align: center; margin-bottom: 10px;'>✉️ Tailored Cover Letter</h5>
+            <iframe src='data:application/pdf;base64,%s' 
+                    style='width:100%%; height:600px; border:1px solid #eee; border-radius: 8px;'>
+            </iframe>
+            
+            <div style='margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;'>
+                <form action="https://www.overleaf.com/docs" method="POST" target="_blank">
+                    <input type="hidden" name="snip" value="%s">
+                    <button type="submit" style="background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%%;">
+                        🚀 Open Letter in Overleaf
+                    </button>
+                </form>
+            </div>
+        </div>
+        
     </div>
-    """.formatted(resumeBase64, escapedResume, coverLetterBase64, escapedCoverLetter);
+</div>
+""".formatted(resumeBase64, finalResumeLatex, coverLetterBase64, finalCoverLetterLatex);
 
         } catch (Exception e) {
             return "Error: Could not read the file. Make sure it's a valid PDF or Word doc. " + e.getMessage();
